@@ -26,10 +26,25 @@ class _ExpensesState extends State<Expenses> {
         category: Category.leisure),
   ];
 
+  void addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+
+  void removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (context) => const NewExpense(),
+      builder: (context) => NewExpense(
+        onAddExpense: addExpense,
+      ),
     );
   }
 
@@ -44,7 +59,11 @@ class _ExpensesState extends State<Expenses> {
       ]),
       body: Column(children: [
         const Text("The cart"),
-        Expanded(child: ExpensesList(expenses: _registeredExpenses)),
+        Expanded(
+            child: ExpensesList(
+          expenses: _registeredExpenses,
+          onRemoveExpense: removeExpense,
+        )),
       ]),
     );
   }
